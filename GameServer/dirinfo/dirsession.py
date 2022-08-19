@@ -16,13 +16,13 @@ class DirSession(TCPConnectionDelegage):
         logger().i("receive from %s %d", str(self.address), len(data))
         os = OctetsStream(order='<').replace(data)
         cmd = os.unmarshal_uint16()
-        print "cmd", cmd
-        body = os.getstr(2)
+        sz = os.unmarshal_uint32()
+        body = data[6:]
         msg = pb_helper.BytesToMessage(body)
-        # if isinstance(msg, message_common_pb2.DirInfo):
-        #     self._send_dirinfo()
-        # else:
-        #     self.close()
+        if isinstance(msg, message_common_pb2.DirInfo):
+            self._send_dirinfo()
+        else:
+            self.close()
     def _send_dirinfo(self):
         path = os.path.split(os.path.realpath(__file__))[0].replace("\\", "/")
         msg = message_common_pb2.DirInfo()
@@ -38,7 +38,7 @@ class DirSession(TCPConnectionDelegage):
             fin.close()
         buff = pb_helper.MessageToSendBytes(msg)
         logger().i("send dirinfo to %s", str(self.address))
-        self.send(buff)
+        #self.send(buff)
     def on_write_complete(self):
         #self.close()
         pass

@@ -48,16 +48,12 @@ def debug_bytes(data):
 def BytesToMessage(data):
     try:
         basemsg = message_common_pb2.Message()
-        print "basemsg"
         basemsg.ParseFromString(data)
-        print "basemsg.message_type", basemsg.message_type
         cls = _id_2_message[basemsg.message_type]
-        print "cls", cls
         msg = cls()
         msg.ParseFromString(basemsg.message_body)
         return msg
     except Exception as e:
-        print e
         pass
 
 def MessageToSendBytes(message):
@@ -66,6 +62,6 @@ def MessageToSendBytes(message):
     meta.message_body = message.SerializeToString()
     body = meta.SerializeToString()
     bodylen = len(body)
-    header = struct.pack('H', bodylen)
+    header = struct.pack('<H', bodylen)
     return header+body
 
