@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 import struct
-
+from google.protobuf import descriptor_pb2
+try:
+    descriptor_pb2.FixRegisterMessageSourceCodeInfo()
+    descriptor_pb2.FixRegisterMessageGeneratedCodeInfo()
+except Exception as e:
+    pass
 from protobuf import message_common_pb2
 from protobuf import message_client_pb2
 from protobuf import message_server_pb2

@@ -41,7 +41,7 @@ class TCPConnection(object):
 		self.stream.set_close_callback(self._on_connection_close)
 		self._message_callback = stack_context.wrap(self._on_receive)
 		self._message_header_callback = stack_context.wrap(self._on_receive_header)
-		self.stream.read_bytes(3, self._message_header_callback, partial=True)
+		self.stream.read_bytes(2, self._message_header_callback, partial=True)
 
 	def _on_timeout(self):
 		self.delegate.on_timeout()
@@ -51,7 +51,7 @@ class TCPConnection(object):
 
 	def _on_receive_header(self, header):
 		try:
-			command, bodylen = struct.unpack('<BH', header) #使用的是小端
+			bodylen = struct.unpack('<H', header)[0] #使用的是小端
 			logger().i("receive msg len is %d", bodylen)
 			self.stream.read_bytes(bodylen, self._message_callback, partial=True)
 		except Exception as ex:
@@ -60,7 +60,7 @@ class TCPConnection(object):
 	def _on_receive(self, data):
 		try:
 			self.delegate.on_receive(data)
-			self.stream.read_bytes(3, self._message_header_callback, partial=True)
+			self.stream.read_bytes(2, self._message_header_callback, partial=True)
 		except Exception as ex:
 			raise ex
 

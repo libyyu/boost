@@ -6,6 +6,7 @@ from utils.logger import logger
 from protobuf import pb_helper
 from protobuf import message_common_pb2
 from pio.octetsstream import OctetsStream
+
 class DirSession(TCPConnectionDelegage):
     def __init__(self):
         TCPConnectionDelegage.__init__(self)
@@ -38,7 +39,7 @@ class DirSession(TCPConnectionDelegage):
             fin.close()
         buff = pb_helper.MessageToSendBytes(msg)
         logger().i("send dirinfo to %s", str(self.address))
-        #self.send(buff)
+        self.send(buff)
     def on_write_complete(self):
         #self.close()
         pass

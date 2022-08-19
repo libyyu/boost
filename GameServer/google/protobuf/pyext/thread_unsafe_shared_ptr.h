@@ -28,58 +28,77 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: anuraag@google.com (Anuraag Agrawal)
-// Author: tibell@google.com (Johan Tibell)
+// ThreadUnsafeSharedPtr<T> is the same as shared_ptr<T> without the locking
+// overhread (and thread-safety).
+#ifndef GOOGLE_PROTOBUF_PYTHON_CPP_THREAD_UNSAFE_SHARED_PTR_H__
+#define GOOGLE_PROTOBUF_PYTHON_CPP_THREAD_UNSAFE_SHARED_PTR_H__
 
-#ifndef GOOGLE_PROTOBUF_PYTHON_CPP_EXTENSION_DICT_H__
-#define GOOGLE_PROTOBUF_PYTHON_CPP_EXTENSION_DICT_H__
+#include <algorithm>
+#include <utility>
 
-#include <Python.h>
-
-#include <memory>
-
-#include <google/protobuf/pyext/message.h>
+#include <google/protobuf/stubs/logging.h>
+#include <google/protobuf/stubs/common.h>
 
 namespace google {
 namespace protobuf {
-
-class Message;
-class FieldDescriptor;
-
 namespace python {
 
-typedef struct ExtensionDict {
-  PyObject_HEAD;
+template <typename T>
+class ThreadUnsafeSharedPtr {
+ public:
+  // Takes ownership.
+  explicit ThreadUnsafeSharedPtr(T* ptr)
+      : ptr_(ptr), refcount_(ptr ? new RefcountT(1) : nullptr) {
+  }
 
-  // This is the top-level C++ Message object that owns the whole
-  // proto tree.  Every Python container class holds a
-  // reference to it in order to keep it alive as long as there's a
-  // Python object that references any part of the tree.
-  CMessage::OwnerRef owner;
+  ThreadUnsafeSharedPtr(const ThreadUnsafeSharedPtr& other)
+      : ThreadUnsafeSharedPtr(nullptr) {
+    *this = other;
+  }
 
-  // Weak reference to parent message. Used to make sure
-  // the parent is writable when an extension field is modified.
-  CMessage* parent;
+  ThreadUnsafeSharedPtr& operator=(const ThreadUnsafeSharedPtr& other) {
+    if (other.refcount_ == refcount_) {
+      return *this;
+    }
+    this->~ThreadUnsafeSharedPtr();
+    ptr_ = other.ptr_;
+    refcount_ = other.refcount_;
+    if (refcount_) {
+      ++*refcount_;
+    }
+    return *this;
+  }
 
-  // Pointer to the C++ Message that this ExtensionDict extends.
-  // Not owned by us.
-  Message* message;
+  ~ThreadUnsafeSharedPtr() {
+    if (refcount_ == nullptr) {
+      GOOGLE_DCHECK(ptr_ == nullptr);
+      return;
+    }
+    if (--*refcount_ == 0) {
+      delete refcount_;
+      delete ptr_;
+    }
+  }
 
-  // A dict of child messages, indexed by Extension descriptors.
-  // Similar to CMessage::composite_fields.
-  PyObject* values;
-} ExtensionDict;
+  void reset(T* ptr = nullptr) { *this = ThreadUnsafeSharedPtr(ptr); }
 
-extern PyTypeObject ExtensionDict_Type;
+  T* get() { return ptr_; }
+  const T* get() const { return ptr_; }
 
-namespace extension_dict {
+  void swap(ThreadUnsafeSharedPtr& other) {
+    using std::swap;
+    swap(ptr_, other.ptr_);
+    swap(refcount_, other.refcount_);
+  }
 
-// Builds an Extensions dict for a specific message.
-ExtensionDict* NewExtensionDict(CMessage *parent);
+ private:
+  typedef int RefcountT;
+  T* ptr_;
+  RefcountT* refcount_;
+};
 
-}  // namespace extension_dict
 }  // namespace python
 }  // namespace protobuf
 
 }  // namespace google
-#endif  // GOOGLE_PROTOBUF_PYTHON_CPP_EXTENSION_DICT_H__
+#endif  // GOOGLE_PROTOBUF_PYTHON_CPP_THREAD_UNSAFE_SHARED_PTR_H__
