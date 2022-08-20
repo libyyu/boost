@@ -51,22 +51,17 @@ def debug_bytes(data):
     return tstr
 
 def BytesToMessage(data):
-    try:
-        basemsg = message_common_pb2.Message()
-        basemsg.ParseFromString(data)
-        cls = _id_2_message[basemsg.message_type]
-        msg = cls()
-        msg.ParseFromString(basemsg.message_body)
-        return msg
-    except Exception as e:
-        pass
+    basemsg = message_common_pb2.Message()
+    basemsg.ParseFromString(data)
+    cls = _id_2_message[basemsg.message_type]
+    msg = cls()
+    msg.ParseFromString(basemsg.message_body)
+    return msg
 
 def MessageToSendBytes(message):
     meta = message_common_pb2.Message()
     meta.message_type = message.type
     meta.message_body = message.SerializeToString()
     body = meta.SerializeToString()
-    bodylen = len(body)
-    header = struct.pack('<H', bodylen)
-    return header+body
+    return body
 

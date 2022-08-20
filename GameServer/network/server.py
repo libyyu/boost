@@ -74,7 +74,8 @@ class TCPConnection(object):
 			self.delegate.on_receive(data)
 			self.stream.read_bytes(2, self._message_header_callback, partial=True)
 		except Exception as ex:
-			raise ex
+			logger().e("on_receive: %s", str(ex))
+			pass
 
 class TCPBaseServer(TCPServer):
 	def __init__(self, io_loop=None, delegate=None, **kwargs):

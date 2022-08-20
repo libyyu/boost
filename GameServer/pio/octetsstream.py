@@ -71,7 +71,11 @@ class OctetsStream(Octets):
     def marshal_double(self, b):
         return self.push_back(pack(self.byteorder('d'), b))
 
+    def marshal_bytes(self, buffer):
+        return self.marshalos(Octets().replace(buffer))
+
     def compact_uint32(self, x):
+        return self.marshal_uint32(x)
         # x &= 0xffffffffL
         if x < 0x40: return self.marshal_uint8(x)
         if x < 0x4000: return self.marshal_uint16(x | 0x8000)
@@ -145,6 +149,7 @@ class OctetsStream(Octets):
         return unpack(self.byteorder('d'), self.getstr(self.pos - 8, self.pos))[0]
 
     def uncompact_uint32(self):
+        return self.unmarshal_uint32()
         if self.pos == self.size(): raise MarshalException()
         x = ord(self.getbyte(self.pos)) & 0xe0
         if x == 0xe0:
@@ -176,6 +181,11 @@ class OctetsStream(Octets):
         if x == 0x70 or x == 0x60 or x == 0x50 or x == 0x40:
             return -(self.unmarshal_uint8() & ~0x40)
         return self.unmarshal_uint8()
+
+    def unmarshal_bytes(self):
+        os = Octets()
+        self.unmarshalos(os)
+        return os.getbytes()
 
     def marshal(self, m):
         return m.marshal(self)

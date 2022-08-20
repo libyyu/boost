@@ -2,21 +2,23 @@
 from marshal import Marshal, MarshalException
 from octetsstream import OctetsStream
 from protobuf import pb_helper
+from utils.enum import Enum
+from utils.logger import logger
 
 all_protocols = {}
-
 def registerProtocol(cls):
 	all_protocols[cls.protocol()] = cls
+
+
+PROTOCOL_TYPE = Enum("MESSAGE_BEGIN",
+               "MESSAGE_TEST",
+               "MESSAGE_PB")
+
 
 class Protocol(Marshal):
 	'''
 	Protocol
 	'''
-	
-
-	def __init__(self):
-		pass
-
 	def encode(self, os):
 		os.marshal_uint16(self.protocol())
 		os.marshalos(OctetsStream().marshal(self))
@@ -25,29 +27,36 @@ class Protocol(Marshal):
 	def decode(cls, iss):
 		ptype = iss.unmarshal_uint16()
 		os = OctetsStream()
-		iss.unmarshal(os)
+		iss.unmarshalos(os)
+		if ptype not in all_protocols:
+			return None
 		protocol = all_protocols[ptype]()
 		os.unmarshal(protocol)
 		return protocol
 
-
-
 class PBProtocol(Protocol):
-	def __init__(self):
-		self.message = None
+	def __init__(self, message = None):
+		self.message = message
 
 	@classmethod
 	def protocol(cls):
-		return 1
+		return PROTOCOL_TYPE.MESSAGE_PB
 
 	def marshal(self, osstream):
-		buffer = pb_helper.MessageToSendBytes(self.message)
-		osstream.append(buffer)
+		try:
+			buffer = pb_helper.MessageToSendBytes(self.message)
+			osstream.append(buffer)
+		except Exception as e:
+			logger.w("PBProtocol.marshal wrong:%s", str(e))
+		finally:
+			return osstream
 
 	def unmarshal(self, isstream):
-		buffer = isstream.getbytes()
-		self.message = pb_helper.BytesToMessage(buffer)
-
-
+		try:
+			self.message = pb_helper.BytesToMessage(str(isstream))
+		except Exception as e:
+			logger.w("PBProtocol.unmarshal wrong:%s", str(e))
+		finally:
+			return isstream
 
 registerProtocol(PBProtocol)

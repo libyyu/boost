@@ -5,7 +5,8 @@ from network.server import TCPConnectionDelegage
 from utils.logger import logger
 from protobuf import pb_helper
 from pio.octetsstream import OctetsStream
-from pio.protocol import Protocol
+from pio.protocol import Protocol, PBProtocol
+from protobuf import message_common_pb2
 
 class DirSession(TCPConnectionDelegage):
     def __init__(self):
@@ -17,21 +18,28 @@ class DirSession(TCPConnectionDelegage):
 
     def on_receive(self, data):
         logger().i("receive from %s %d", str(self.address), len(data))
-        os = OctetsStream(order='<').replace(data)
+        oss = OctetsStream(order='<').replace(data)
 
-        protocol = Protocol.decode(os)
-        print protocol
+        protocol = Protocol.decode(oss)
 
-        # cmd = os.unmarshal_uint16()
-        # sz = os.unmarshal_uint32()
-        # body = data[6:]
-        # msg = pb_helper.BytesToMessage(body)
-        # if isinstance(msg, message_common_pb2.DirInfo):
-        #     self._send_dirinfo()
-        # else:
-        #     self.close()
+        if isinstance(protocol, PBProtocol) and protocol.message is not None and isinstance(protocol.message, message_common_pb2.DirInfo):
+            self._send_dirinfo()
+        else:
+            self.close()
+
+    def SendProtocol(self, protocol):
+        oss = OctetsStream(order='<')
+        protocol.encode(oss)
+
+        buffer = OctetsStream(order='<')
+        buffer.marshal_uint16(len(oss))
+        buffer.append(oss)
+
+        logger().i("send protocol(%s) to %s, len:%d", str(protocol), str(self.address), len(buffer))
+        self.send(str(buffer))
 
     def _send_dirinfo(self):
+        logger().i("_send_dirinfo")
         path = os.path.split(os.path.realpath(__file__))[0].replace("\\", "/")
         msg = message_common_pb2.DirInfo()
         filename = path + "/bin/version.xml"
@@ -44,9 +52,12 @@ class DirSession(TCPConnectionDelegage):
             data = fin.read()
             msg.patches = data
             fin.close()
-        buff = pb_helper.MessageToSendBytes(msg)
-        logger().i("send dirinfo to %s", str(self.address))
-        self.send(buff)
+
+        protocol = PBProtocol()
+        protocol.message = msg
+
+        self.SendProtocol(protocol)
+            
 
     def on_write_complete(self):
         #self.close()
