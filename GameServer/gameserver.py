@@ -15,7 +15,7 @@ class app(object):
     class app
     '''
     def __init__(self):
-        self.network = TCPBaseServer(handle=PlayerSession)
+        self.network = TCPBaseServer(delegate=PlayerSession())
 
     def stop(self):
         self.network.stop()

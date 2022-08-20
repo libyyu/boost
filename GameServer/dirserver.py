@@ -11,7 +11,7 @@ class app(object):
     class app
     '''
     def __init__(self):
-        self.network = TCPBaseServer(handle=DirSession)
+        self.network = TCPBaseServer(delegate=DirSession())
 
     def stop(self):
         self.network.stop()

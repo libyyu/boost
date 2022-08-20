@@ -17,6 +17,7 @@ def init_logging():
 	sh.setFormatter(formatter)
 	logger.addHandler(sh)
 	logging.info("Current log level is : %s", logging.getLevelName(logger.getEffectiveLevel()))
+	
 class TCPClient(object):
 	def __init__(self, host, port, io_loop=None):
 		self.host = host
