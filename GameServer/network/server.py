@@ -42,11 +42,11 @@ class TCPConnectionDelegage(object):
 			self.stream.close()
 
 class TCPConnection(object):
-	connections = set()
+	connections = dict()
 	def __del__(self):
-		TCPConnection.connections.remove(self)
+		pass
 	def __init__(self, stream, address, delegate = TCPConnectionDelegage()):
-		TCPConnection.connections.add(self)
+		TCPConnection.connections[address] = self
 		self.delegate = delegate
 		self.stream = stream
 		self.address = address
@@ -71,6 +71,7 @@ class TCPConnection(object):
 
 	def _on_connection_close(self):
 		logger().i("client is disconnect %s", str(self.address))
+		del TCPConnection.connections[self.address]
 		self.delegate.on_close()
 
 	# def _on_receive_header(self, header):
