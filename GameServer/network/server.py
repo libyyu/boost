@@ -63,7 +63,7 @@ class TCPConnection(object):
 
 	def _on_receive_header(self, header):
 		try:
-			bodylen = struct.unpack('<H', header)[0] #使用的是小端
+			bodylen = struct.unpack('!H', header)[0] #使用的是大端
 			logger().i("receive msg len is %d", bodylen)
 			self.stream.read_bytes(bodylen, self._message_body_callback, partial=True)
 		except Exception as ex:

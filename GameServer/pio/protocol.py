@@ -14,6 +14,8 @@ PROTOCOL_TYPE = Enum("MESSAGE_BEGIN",
                "MESSAGE_TEST",
                "MESSAGE_PB")
 
+EndianMode = Enum("None", "BigEndian", "LittleEndian", "Network")
+
 
 class Protocol(Marshal):
 	'''

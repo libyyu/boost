@@ -18,7 +18,7 @@ class DirSession(TCPConnectionDelegage):
 
     def on_receive(self, data):
         logger().i("receive from %s %d", str(self.address), len(data))
-        oss = OctetsStream(order='<').replace(data)
+        oss = OctetsStream(order='!').replace(data)
 
         protocol = Protocol.decode(oss)
 
@@ -28,10 +28,10 @@ class DirSession(TCPConnectionDelegage):
             self.close()
 
     def SendProtocol(self, protocol):
-        oss = OctetsStream(order='<')
+        oss = OctetsStream(order='!')
         protocol.encode(oss)
 
-        buffer = OctetsStream(order='<')
+        buffer = OctetsStream(order='!')
         buffer.marshal_uint16(len(oss))
         buffer.append(oss)
 
