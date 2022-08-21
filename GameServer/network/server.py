@@ -29,6 +29,9 @@ class TCPConnectionDelegage(object):
 		else:
 			raise Exception("connection is broken.")
 
+	def notify_all(self, data):
+		self.conn.notify_all(data, [self.conn])
+
 	def __init__(self):
 		self.stream = None
 		self.address = None
@@ -39,7 +42,11 @@ class TCPConnectionDelegage(object):
 			self.stream.close()
 
 class TCPConnection(object):
+	connections = set()
+	def __del__(self):
+		TCPConnection.connections.remove(self)
 	def __init__(self, stream, address, delegate = TCPConnectionDelegage()):
+		TCPConnection.connections.add(self)
 		self.delegate = delegate
 		self.stream = stream
 		self.address = address
@@ -49,9 +56,14 @@ class TCPConnection(object):
 		self.delegate.conn = self
 		self.delegate.on_connect()
 		self.stream.set_close_callback(self._on_connection_close)
-		self._message_body_callback = stack_context.wrap(self._on_receive_body)
-		self._message_header_callback = stack_context.wrap(self._on_receive_header)
-		self.stream.read_bytes(2, self._message_header_callback, partial=True)
+		# self._message_body_callback = stack_context.wrap(self._on_receive_body)
+		# self._message_header_callback = stack_context.wrap(self._on_receive_header)
+		# self.stream.read_bytes(2, self._message_header_callback, partial=True)
+
+	def notify_all(self, data, ignorelist = None):
+		for conn in TCPConnection.connections:
+			if ignorelist is None or conn not in ignorelist:
+				conn.delegate.send(data)
 
 	def _on_timeout(self):
 		logger().i("connect timeout")
@@ -61,21 +73,38 @@ class TCPConnection(object):
 		logger().i("client is disconnect %s", str(self.address))
 		self.delegate.on_close()
 
-	def _on_receive_header(self, header):
-		try:
-			bodylen = struct.unpack('!H', header)[0] #使用的是大端
-			logger().i("receive msg len is %d", bodylen)
-			self.stream.read_bytes(bodylen, self._message_body_callback, partial=True)
-		except Exception as ex:
-			raise ex
+	# def _on_receive_header(self, header):
+	# 	try:
+	# 		bodylen = struct.unpack('!H', header)[0] #使用的是大端
+	# 		logger().i("receive msg len is %d", bodylen)
+	# 		self.stream.read_bytes(bodylen, self._message_body_callback, partial=True)
+	# 	except Exception as ex:
+	# 		raise ex
 
-	def _on_receive_body(self, data):
-		try:
-			self.delegate.on_receive(data)
-			self.stream.read_bytes(2, self._message_header_callback, partial=True)
-		except Exception as ex:
-			logger().e("on_receive: %s", str(ex))
-			pass
+	# def _on_receive_body(self, data):
+	# 	try:
+	# 		self.delegate.on_receive(data)
+	# 		self.stream.read_bytes(2, self._message_header_callback, partial=True)
+	# 	except Exception as ex:
+	# 		logger().e("on_receive: %s", str(ex))
+	# 		pass
+
+	@gen.coroutine
+	def _receive_message(self):
+		while True:
+			try:
+				chunk = yield self.stream.read_bytes(2)
+				if len(chunk) < 2:
+					break
+				bodylen = struct.unpack('!H', chunk)[0]
+				chunk = yield self.stream.read_bytes(bodylen)
+				while len(chunk) < bodylen:
+					chunk += yield self.stream.read_bytes(bodylen - len(chunk))
+
+				self.delegate.on_receive(chunk)
+			except iostream.StreamClosedError:
+				logger().w("client stream closed %s", str(self.address))
+				break
 
 class TCPBaseServer(TCPServer):
 	def __init__(self, io_loop=None, delegate=None, **kwargs):
@@ -83,11 +112,13 @@ class TCPBaseServer(TCPServer):
 		assert isinstance(delegate, TCPConnectionDelegage), "delegate must be implement TCPConnectionDelegage"
 		self.delegate = delegate
 
+	@gen.coroutine
 	def handle_stream(self, stream, address):
 		if self.delegate is None:
-			TCPConnection(stream, address, TCPConnectionDelegage())
+			conn = TCPConnection(stream, address, TCPConnectionDelegage())
 		else:
-			TCPConnection(stream, address, self.delegate)
+			conn = TCPConnection(stream, address, self.delegate)
+		conn._receive_message()
 		
 
 	def run(self, port):
