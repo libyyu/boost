@@ -18,6 +18,7 @@ class DirSession(TCPConnectionDelegage):
 
     def on_receive(self, data):
         logger().i("receive from %s %d", str(self.address), len(data))
+        
         oss = OctetsStream(order='!').replace(data)
 
         protocol = Protocol.decode(oss)

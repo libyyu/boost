@@ -3,6 +3,7 @@
 
 import sys
 _b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
+from google.protobuf.internal import enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
@@ -12,19 +13,58 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from google.protobuf import descriptor_pb2 as google_dot_protobuf_dot_descriptor__pb2
 import message_common_pb2 as message__common__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='message_server.proto',
   package='pb',
-  syntax='proto2',
+  syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x14message_server.proto\x12\x02pb\x1a\x14message_common.proto\"^\n\rTestMessageRe\x12\x33\n\x04type\x18\x01 \x01(\x0e\x32\x0c.pb.NET_TYPE:\x17NET_TYPE_TESTMESSAGE_RE\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x0c\n\x04\x62uff\x18\x03 \x01(\x0c')
+  serialized_pb=_b('\n\x14message_server.proto\x12\x02pb\x1a google/protobuf/descriptor.proto\x1a\x14message_common.proto\"/\n\rTestMessageRe\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x0c\n\x04\x62uff\x18\x03 \x01(\x0c:\x04\x90\xa0\x1f\x01*U\n\x0fS2C_PROTOC_TYPE\x12\x12\n\x0eS2C_TYPE_BEGIN\x10\x00\x12\x1b\n\x17S2C_TYPE_TESTMESSAGE_RE\x10\x01\x12\x11\n\x0cS2C_TYPE_END\x10\xe7\x07:H\n\x08s2c_type\x12\x1f.google.protobuf.MessageOptions\x18\x82\xf4\x03 \x01(\x0e\x32\x13.pb.S2C_PROTOC_TYPEb\x06proto3')
   ,
-  dependencies=[message__common__pb2.DESCRIPTOR,])
+  dependencies=[google_dot_protobuf_dot_descriptor__pb2.DESCRIPTOR,message__common__pb2.DESCRIPTOR,])
 
+_S2C_PROTOC_TYPE = _descriptor.EnumDescriptor(
+  name='S2C_PROTOC_TYPE',
+  full_name='pb.S2C_PROTOC_TYPE',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='S2C_TYPE_BEGIN', index=0, number=0,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='S2C_TYPE_TESTMESSAGE_RE', index=1, number=1,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='S2C_TYPE_END', index=2, number=999,
+      serialized_options=None,
+      type=None),
+  ],
+  containing_type=None,
+  serialized_options=None,
+  serialized_start=133,
+  serialized_end=218,
+)
+_sym_db.RegisterEnumDescriptor(_S2C_PROTOC_TYPE)
 
+S2C_PROTOC_TYPE = enum_type_wrapper.EnumTypeWrapper(_S2C_PROTOC_TYPE)
+S2C_TYPE_BEGIN = 0
+S2C_TYPE_TESTMESSAGE_RE = 1
+S2C_TYPE_END = 999
+
+S2C_TYPE_FIELD_NUMBER = 64002
+s2c_type = _descriptor.FieldDescriptor(
+  name='s2c_type', full_name='pb.s2c_type', index=0,
+  number=64002, type=14, cpp_type=8, label=1,
+  has_default_value=False, default_value=0,
+  message_type=None, enum_type=None, containing_type=None,
+  is_extension=True, extension_scope=None,
+  serialized_options=None, file=DESCRIPTOR)
 
 
 _TESTMESSAGERE = _descriptor.Descriptor(
@@ -35,21 +75,14 @@ _TESTMESSAGERE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='pb.TestMessageRe.type', index=0,
-      number=1, type=14, cpp_type=8, label=1,
-      has_default_value=True, default_value=5,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='id', full_name='pb.TestMessageRe.id', index=1,
+      name='id', full_name='pb.TestMessageRe.id', index=0,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='buff', full_name='pb.TestMessageRe.buff', index=2,
+      name='buff', full_name='pb.TestMessageRe.buff', index=1,
       number=3, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
@@ -61,18 +94,19 @@ _TESTMESSAGERE = _descriptor.Descriptor(
   nested_types=[],
   enum_types=[
   ],
-  serialized_options=None,
+  serialized_options=_b('\220\240\037\001'),
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=50,
-  serialized_end=144,
+  serialized_start=84,
+  serialized_end=131,
 )
 
-_TESTMESSAGERE.fields_by_name['type'].enum_type = message__common__pb2._NET_TYPE
 DESCRIPTOR.message_types_by_name['TestMessageRe'] = _TESTMESSAGERE
+DESCRIPTOR.enum_types_by_name['S2C_PROTOC_TYPE'] = _S2C_PROTOC_TYPE
+DESCRIPTOR.extensions_by_name['s2c_type'] = s2c_type
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 TestMessageRe = _reflection.GeneratedProtocolMessageType('TestMessageRe', (_message.Message,), dict(
@@ -82,5 +116,8 @@ TestMessageRe = _reflection.GeneratedProtocolMessageType('TestMessageRe', (_mess
   ))
 _sym_db.RegisterMessage(TestMessageRe)
 
+s2c_type.enum_type = _S2C_PROTOC_TYPE
+google_dot_protobuf_dot_descriptor__pb2.MessageOptions.RegisterExtension(s2c_type)
 
+_TESTMESSAGERE._options = None
 # @@protoc_insertion_point(module_scope)

@@ -1,19 +1,14 @@
 # -*- coding: utf-8 -*-
 import struct
-from google.protobuf import descriptor_pb2
-try:
-    descriptor_pb2.FixRegisterMessageSourceCodeInfo()
-    descriptor_pb2.FixRegisterMessageGeneratedCodeInfo()
-except Exception as e:
-    pass
+
 from protobuf import message_common_pb2
-from protobuf import message_client_pb2
-from protobuf import message_server_pb2
+# from protobuf import message_client_pb2
+# from protobuf import message_server_pb2
 
 from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
-_messages = _sym_db.GetMessages(['message_common.proto', 'message_client.proto', 'message_server.proto'])
+_messages = _sym_db.GetMessages(['message_common.proto'])
 
 
 _id_2_message = {}
@@ -53,6 +48,8 @@ def debug_bytes(data):
 def BytesToMessage(data):
     basemsg = message_common_pb2.Message()
     basemsg.ParseFromString(data)
+    if basemsg.message_type not in _id_2_message:
+        raise Exception("message_type %d not found."% basemsg.message_type)
     cls = _id_2_message[basemsg.message_type]
     msg = cls()
     msg.ParseFromString(basemsg.message_body)

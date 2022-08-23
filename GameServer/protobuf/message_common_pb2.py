@@ -13,19 +13,21 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from google.protobuf import descriptor_pb2 as google_dot_protobuf_dot_descriptor__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='message_common.proto',
   package='pb',
-  syntax='proto2',
+  syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x14message_common.proto\x12\x02pb\"q\n\x07Message\x12,\n\x04type\x18\x01 \x01(\x0e\x32\x0c.pb.NET_TYPE:\x10NET_TYPE_MESSAGE\x12\"\n\x0cmessage_type\x18\x02 \x02(\x0e\x32\x0c.pb.NET_TYPE\x12\x14\n\x0cmessage_body\x18\x03 \x01(\x0c\"Y\n\x07\x44irInfo\x12,\n\x04type\x18\x01 \x01(\x0e\x32\x0c.pb.NET_TYPE:\x10NET_TYPE_DIRINFO\x12\x0f\n\x07version\x18\x02 \x01(\x0c\x12\x0f\n\x07patches\x18\x03 \x01(\x0c*\xb0\x01\n\x08NET_TYPE\x12\x12\n\x0eNET_TYPE_BEGIN\x10\x00\x12\x14\n\x10NET_TYPE_MESSAGE\x10\x01\x12\x14\n\x10NET_TYPE_DIRINFO\x10\x02\x12\x19\n\x15NET_TYPE_TESTMESSAGE1\x10\x03\x12\x19\n\x15NET_TYPE_TESTMESSAGE2\x10\x04\x12\x1b\n\x17NET_TYPE_TESTMESSAGE_RE\x10\x05\x12\x11\n\x0cNET_TYPE_END\x10\xe7\x07')
-)
+  serialized_pb=_b('\n\x14message_common.proto\x12\x02pb\x1a google/protobuf/descriptor.proto\"P\n\x07Message\x12)\n\x0cmessage_type\x18\x02 \x01(\x0e\x32\x13.pb.NET_PROTOC_TYPE\x12\x14\n\x0cmessage_body\x18\x03 \x01(\x0c:\x04\x88\xa0\x1f\x01\"1\n\x07\x44irInfo\x12\x0f\n\x07version\x18\x02 \x01(\x0c\x12\x0f\n\x07patches\x18\x03 \x01(\x0c:\x04\x88\xa0\x1f\x02*d\n\x0fNET_PROTOC_TYPE\x12\x12\n\x0eNET_TYPE_BEGIN\x10\x00\x12\x14\n\x10NET_TYPE_MESSAGE\x10\x01\x12\x14\n\x10NET_TYPE_DIRINFO\x10\x02\x12\x11\n\x0cNET_TYPE_END\x10\xe7\x07:H\n\x08npt_type\x12\x1f.google.protobuf.MessageOptions\x18\x81\xf4\x03 \x01(\x0e\x32\x13.pb.NET_PROTOC_TYPEb\x06proto3')
+  ,
+  dependencies=[google_dot_protobuf_dot_descriptor__pb2.DESCRIPTOR,])
 
-_NET_TYPE = _descriptor.EnumDescriptor(
-  name='NET_TYPE',
-  full_name='pb.NET_TYPE',
+_NET_PROTOC_TYPE = _descriptor.EnumDescriptor(
+  name='NET_PROTOC_TYPE',
+  full_name='pb.NET_PROTOC_TYPE',
   filename=None,
   file=DESCRIPTOR,
   values=[
@@ -42,38 +44,31 @@ _NET_TYPE = _descriptor.EnumDescriptor(
       serialized_options=None,
       type=None),
     _descriptor.EnumValueDescriptor(
-      name='NET_TYPE_TESTMESSAGE1', index=3, number=3,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='NET_TYPE_TESTMESSAGE2', index=4, number=4,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='NET_TYPE_TESTMESSAGE_RE', index=5, number=5,
-      serialized_options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='NET_TYPE_END', index=6, number=999,
+      name='NET_TYPE_END', index=3, number=999,
       serialized_options=None,
       type=None),
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=235,
-  serialized_end=411,
+  serialized_start=195,
+  serialized_end=295,
 )
-_sym_db.RegisterEnumDescriptor(_NET_TYPE)
+_sym_db.RegisterEnumDescriptor(_NET_PROTOC_TYPE)
 
-NET_TYPE = enum_type_wrapper.EnumTypeWrapper(_NET_TYPE)
+NET_PROTOC_TYPE = enum_type_wrapper.EnumTypeWrapper(_NET_PROTOC_TYPE)
 NET_TYPE_BEGIN = 0
 NET_TYPE_MESSAGE = 1
 NET_TYPE_DIRINFO = 2
-NET_TYPE_TESTMESSAGE1 = 3
-NET_TYPE_TESTMESSAGE2 = 4
-NET_TYPE_TESTMESSAGE_RE = 5
 NET_TYPE_END = 999
 
+NPT_TYPE_FIELD_NUMBER = 64001
+npt_type = _descriptor.FieldDescriptor(
+  name='npt_type', full_name='pb.npt_type', index=0,
+  number=64001, type=14, cpp_type=8, label=1,
+  has_default_value=False, default_value=0,
+  message_type=None, enum_type=None, containing_type=None,
+  is_extension=True, extension_scope=None,
+  serialized_options=None, file=DESCRIPTOR)
 
 
 _MESSAGE = _descriptor.Descriptor(
@@ -84,21 +79,14 @@ _MESSAGE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='pb.Message.type', index=0,
-      number=1, type=14, cpp_type=8, label=1,
-      has_default_value=True, default_value=1,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='message_type', full_name='pb.Message.message_type', index=1,
-      number=2, type=14, cpp_type=8, label=2,
+      name='message_type', full_name='pb.Message.message_type', index=0,
+      number=2, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='message_body', full_name='pb.Message.message_body', index=2,
+      name='message_body', full_name='pb.Message.message_body', index=1,
       number=3, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
@@ -110,14 +98,14 @@ _MESSAGE = _descriptor.Descriptor(
   nested_types=[],
   enum_types=[
   ],
-  serialized_options=None,
+  serialized_options=_b('\210\240\037\001'),
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=28,
-  serialized_end=141,
+  serialized_start=62,
+  serialized_end=142,
 )
 
 
@@ -129,21 +117,14 @@ _DIRINFO = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='pb.DirInfo.type', index=0,
-      number=1, type=14, cpp_type=8, label=1,
-      has_default_value=True, default_value=2,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='version', full_name='pb.DirInfo.version', index=1,
+      name='version', full_name='pb.DirInfo.version', index=0,
       number=2, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='patches', full_name='pb.DirInfo.patches', index=2,
+      name='patches', full_name='pb.DirInfo.patches', index=1,
       number=3, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
@@ -155,22 +136,21 @@ _DIRINFO = _descriptor.Descriptor(
   nested_types=[],
   enum_types=[
   ],
-  serialized_options=None,
+  serialized_options=_b('\210\240\037\002'),
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=143,
-  serialized_end=232,
+  serialized_start=144,
+  serialized_end=193,
 )
 
-_MESSAGE.fields_by_name['type'].enum_type = _NET_TYPE
-_MESSAGE.fields_by_name['message_type'].enum_type = _NET_TYPE
-_DIRINFO.fields_by_name['type'].enum_type = _NET_TYPE
+_MESSAGE.fields_by_name['message_type'].enum_type = _NET_PROTOC_TYPE
 DESCRIPTOR.message_types_by_name['Message'] = _MESSAGE
 DESCRIPTOR.message_types_by_name['DirInfo'] = _DIRINFO
-DESCRIPTOR.enum_types_by_name['NET_TYPE'] = _NET_TYPE
+DESCRIPTOR.enum_types_by_name['NET_PROTOC_TYPE'] = _NET_PROTOC_TYPE
+DESCRIPTOR.extensions_by_name['npt_type'] = npt_type
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Message = _reflection.GeneratedProtocolMessageType('Message', (_message.Message,), dict(
@@ -187,5 +167,9 @@ DirInfo = _reflection.GeneratedProtocolMessageType('DirInfo', (_message.Message,
   ))
 _sym_db.RegisterMessage(DirInfo)
 
+npt_type.enum_type = _NET_PROTOC_TYPE
+google_dot_protobuf_dot_descriptor__pb2.MessageOptions.RegisterExtension(npt_type)
 
+_MESSAGE._options = None
+_DIRINFO._options = None
 # @@protoc_insertion_point(module_scope)

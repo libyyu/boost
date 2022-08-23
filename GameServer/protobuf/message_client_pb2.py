@@ -3,6 +3,7 @@
 
 import sys
 _b=sys.version_info[0]<3 and (lambda x:x) or (lambda x:x.encode('latin1'))
+from google.protobuf.internal import enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
 from google.protobuf import reflection as _reflection
@@ -12,19 +13,63 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from google.protobuf import descriptor_pb2 as google_dot_protobuf_dot_descriptor__pb2
 import message_common_pb2 as message__common__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='message_client.proto',
   package='pb',
-  syntax='proto2',
+  syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x14message_client.proto\x12\x02pb\x1a\x14message_common.proto\"u\n\x0bTestMessage\x12\x31\n\x04type\x18\x01 \x01(\x0e\x32\x0c.pb.NET_TYPE:\x15NET_TYPE_TESTMESSAGE1\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x0c\n\x04\x62uff\x18\x03 \x01(\x0c\x12\x19\n\x04info\x18\x04 \x01(\x0b\x32\x0b.pb.DirInfo\"z\n\x0cTestMessage2\x12\x31\n\x04type\x18\x01 \x01(\x0e\x32\x0c.pb.NET_TYPE:\x15NET_TYPE_TESTMESSAGE2\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x0c\n\x04\x62uff\x18\x03 \x01(\x0c\x12\x1d\n\x04info\x18\x04 \x01(\x0b\x32\x0f.pb.TestMessage')
+  serialized_pb=_b('\n\x14message_client.proto\x12\x02pb\x1a google/protobuf/descriptor.proto\x1a\x14message_common.proto\"H\n\x0bTestMessage\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x0c\n\x04\x62uff\x18\x03 \x01(\x0c\x12\x19\n\x04info\x18\x04 \x01(\x0b\x32\x0b.pb.DirInfo:\x04\x98\xa0\x1f\x01\"M\n\x0cTestMessage2\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x0c\n\x04\x62uff\x18\x03 \x01(\x0c\x12\x1d\n\x04info\x18\x04 \x01(\x0b\x32\x0f.pb.TestMessage:\x04\x98\xa0\x1f\x02*n\n\x0f\x43\x32S_PROTOC_TYPE\x12\x12\n\x0e\x43\x32S_TYPE_BEGIN\x10\x00\x12\x19\n\x15\x43\x32S_TYPE_TESTMESSAGE1\x10\x01\x12\x19\n\x15\x43\x32S_TYPE_TESTMESSAGE2\x10\x02\x12\x11\n\x0c\x43\x32S_TYPE_END\x10\xe7\x07:H\n\x08\x63\x32s_type\x12\x1f.google.protobuf.MessageOptions\x18\x83\xf4\x03 \x01(\x0e\x32\x13.pb.C2S_PROTOC_TYPEb\x06proto3')
   ,
-  dependencies=[message__common__pb2.DESCRIPTOR,])
+  dependencies=[google_dot_protobuf_dot_descriptor__pb2.DESCRIPTOR,message__common__pb2.DESCRIPTOR,])
 
+_C2S_PROTOC_TYPE = _descriptor.EnumDescriptor(
+  name='C2S_PROTOC_TYPE',
+  full_name='pb.C2S_PROTOC_TYPE',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='C2S_TYPE_BEGIN', index=0, number=0,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='C2S_TYPE_TESTMESSAGE1', index=1, number=1,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='C2S_TYPE_TESTMESSAGE2', index=2, number=2,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='C2S_TYPE_END', index=3, number=999,
+      serialized_options=None,
+      type=None),
+  ],
+  containing_type=None,
+  serialized_options=None,
+  serialized_start=237,
+  serialized_end=347,
+)
+_sym_db.RegisterEnumDescriptor(_C2S_PROTOC_TYPE)
 
+C2S_PROTOC_TYPE = enum_type_wrapper.EnumTypeWrapper(_C2S_PROTOC_TYPE)
+C2S_TYPE_BEGIN = 0
+C2S_TYPE_TESTMESSAGE1 = 1
+C2S_TYPE_TESTMESSAGE2 = 2
+C2S_TYPE_END = 999
+
+C2S_TYPE_FIELD_NUMBER = 64003
+c2s_type = _descriptor.FieldDescriptor(
+  name='c2s_type', full_name='pb.c2s_type', index=0,
+  number=64003, type=14, cpp_type=8, label=1,
+  has_default_value=False, default_value=0,
+  message_type=None, enum_type=None, containing_type=None,
+  is_extension=True, extension_scope=None,
+  serialized_options=None, file=DESCRIPTOR)
 
 
 _TESTMESSAGE = _descriptor.Descriptor(
@@ -35,28 +80,21 @@ _TESTMESSAGE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='pb.TestMessage.type', index=0,
-      number=1, type=14, cpp_type=8, label=1,
-      has_default_value=True, default_value=3,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='id', full_name='pb.TestMessage.id', index=1,
+      name='id', full_name='pb.TestMessage.id', index=0,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='buff', full_name='pb.TestMessage.buff', index=2,
+      name='buff', full_name='pb.TestMessage.buff', index=1,
       number=3, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='info', full_name='pb.TestMessage.info', index=3,
+      name='info', full_name='pb.TestMessage.info', index=2,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -68,14 +106,14 @@ _TESTMESSAGE = _descriptor.Descriptor(
   nested_types=[],
   enum_types=[
   ],
-  serialized_options=None,
+  serialized_options=_b('\230\240\037\001'),
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=50,
-  serialized_end=167,
+  serialized_start=84,
+  serialized_end=156,
 )
 
 
@@ -87,28 +125,21 @@ _TESTMESSAGE2 = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='pb.TestMessage2.type', index=0,
-      number=1, type=14, cpp_type=8, label=1,
-      has_default_value=True, default_value=4,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='id', full_name='pb.TestMessage2.id', index=1,
+      name='id', full_name='pb.TestMessage2.id', index=0,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='buff', full_name='pb.TestMessage2.buff', index=2,
+      name='buff', full_name='pb.TestMessage2.buff', index=1,
       number=3, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='info', full_name='pb.TestMessage2.info', index=3,
+      name='info', full_name='pb.TestMessage2.info', index=2,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -120,22 +151,22 @@ _TESTMESSAGE2 = _descriptor.Descriptor(
   nested_types=[],
   enum_types=[
   ],
-  serialized_options=None,
+  serialized_options=_b('\230\240\037\002'),
   is_extendable=False,
-  syntax='proto2',
+  syntax='proto3',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=169,
-  serialized_end=291,
+  serialized_start=158,
+  serialized_end=235,
 )
 
-_TESTMESSAGE.fields_by_name['type'].enum_type = message__common__pb2._NET_TYPE
 _TESTMESSAGE.fields_by_name['info'].message_type = message__common__pb2._DIRINFO
-_TESTMESSAGE2.fields_by_name['type'].enum_type = message__common__pb2._NET_TYPE
 _TESTMESSAGE2.fields_by_name['info'].message_type = _TESTMESSAGE
 DESCRIPTOR.message_types_by_name['TestMessage'] = _TESTMESSAGE
 DESCRIPTOR.message_types_by_name['TestMessage2'] = _TESTMESSAGE2
+DESCRIPTOR.enum_types_by_name['C2S_PROTOC_TYPE'] = _C2S_PROTOC_TYPE
+DESCRIPTOR.extensions_by_name['c2s_type'] = c2s_type
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 TestMessage = _reflection.GeneratedProtocolMessageType('TestMessage', (_message.Message,), dict(
@@ -152,5 +183,9 @@ TestMessage2 = _reflection.GeneratedProtocolMessageType('TestMessage2', (_messag
   ))
 _sym_db.RegisterMessage(TestMessage2)
 
+c2s_type.enum_type = _C2S_PROTOC_TYPE
+google_dot_protobuf_dot_descriptor__pb2.MessageOptions.RegisterExtension(c2s_type)
 
+_TESTMESSAGE._options = None
+_TESTMESSAGE2._options = None
 # @@protoc_insertion_point(module_scope)
