@@ -14,13 +14,9 @@ _messages = _sym_db.GetMessages(['message_common.proto'])
 _id_2_message = {}
 _name_2_message = {}
 for (full_name, message) in _messages.items():
-    if len(message.DESCRIPTOR.fields) >0:
-        message_field = message.DESCRIPTOR.fields[0]
-        if message_field.name != 'type': continue
-        if message_field.enum_type is None: continue
-        if message_field.enum_type.name != 'NET_TYPE': continue
-        id = message_field.default_value
-        _id_2_message[id] = message
+    msg_type = message.DESCRIPTOR.GetOptions().Extensions[message_common_pb2.npt_type]
+    if msg_type:
+        _id_2_message[msg_type] = message
         _name_2_message[full_name] = message
 
 
@@ -56,8 +52,9 @@ def BytesToMessage(data):
     return msg
 
 def MessageToSendBytes(message):
+    message_type = message.DESCRIPTOR.GetOptions().Extensions[message_common_pb2.npt_type]
     meta = message_common_pb2.Message()
-    meta.message_type = message.type
+    meta.message_type = message_type
     meta.message_body = message.SerializeToString()
     body = meta.SerializeToString()
     return body
