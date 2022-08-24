@@ -1,3 +1,6 @@
+import sys
+
+PY3 = sys.version_info >= (3, 0)
 
 def roundsize(size):
     capacity = 2
@@ -120,8 +123,8 @@ class Octets:
         if not tob: tob = self.count
         r = ''
         for i in range(fromb, tob):
-            r = r + self.buffer[i]
-        return r
+            r = r + (PY3 and str(self.buffer[i]) or self.buffer[i])
+        return r.encode() if PY3 else r
 
     def __str__(self):
         return self.getstr(0, self.count)

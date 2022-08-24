@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from marshal import Marshal, MarshalException
-from octetsstream import OctetsStream
+from pio.marshal import Marshal, MarshalException
+from pio.octetsstream import OctetsStream
 from protobuf import pb_helper
 from utils.enum import Enum
 from utils.logger import logger
@@ -29,7 +29,8 @@ class Protocol(Marshal):
 	def decode(cls, iss):
 		ptype = iss.unmarshal_uint16()
 		os = OctetsStream()
-		iss.unmarshalos(os)
+		if not iss.eos:
+			iss.unmarshalos(os)
 		if ptype not in all_protocols:
 			return None
 		protocol = all_protocols[ptype]()

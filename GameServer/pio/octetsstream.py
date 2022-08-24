@@ -77,26 +77,27 @@ class OctetsStream(Octets):
     def compact_uint32(self, x):
         return self.marshal_uint32(x)
         # x &= 0xffffffffL
-        if x < 0x40: return self.marshal_uint8(x)
-        if x < 0x4000: return self.marshal_uint16(x | 0x8000)
-        if x < 0x20000000: return self.marshal_uint32(x | 0xc0000000L)
-        self.marshal_uint8(0xe0)
-        return self.marshal_uint32(x)
+        # if x < 0x40: return self.marshal_uint8(x)
+        # if x < 0x4000: return self.marshal_uint16(x | 0x8000)
+        # if x < 0x20000000: return self.marshal_uint32(x | 0xc0000000L)
+        # self.marshal_uint8(0xe0)
+        # return self.marshal_uint32(x)
 
     def compact_sint32(self, x):
-        if x >= 0:
-            if x < 0x40: return self.marshal_uint8(x)
-            if x < 0x2000: return self.marshal_uint16(x | 0x8000)
-            if x < 0x10000000: return self.marshal_uint32(x | 0xc0000000L)
-            self.marshal_uint8(0xe0)
-            return self.marshal_uint32(x)
-        if -x > 0:
-            x = -x
-            if x < 0x40: return self.marshal_uint8(x | 0x40)
-            if x < 0x2000: return self.marshal_uint16(x | 0xa000)
-            if x < 0x10000000: return self.marshal_uint32(x | 0xd0000000L)
-            self.marshal_uint8(0xf0)
-            return self.marshal_uint32(x)
+        return self.marshal_uint32(x)
+        # if x >= 0:
+        #     if x < 0x40: return self.marshal_uint8(x)
+        #     if x < 0x2000: return self.marshal_uint16(x | 0x8000)
+        #     if x < 0x10000000: return self.marshal_uint32(x | 0xc0000000L)
+        #     self.marshal_uint8(0xe0)
+        #     return self.marshal_uint32(x)
+        # if -x > 0:
+        #     x = -x
+        #     if x < 0x40: return self.marshal_uint8(x | 0x40)
+        #     if x < 0x2000: return self.marshal_uint16(x | 0xa000)
+        #     if x < 0x10000000: return self.marshal_uint32(x | 0xd0000000L)
+        #     self.marshal_uint8(0xf0)
+        #     return self.marshal_uint32(x)
 
     def unmarshal_int8(self):
         if self.pos + 1 > self.size(): raise MarshalException()
@@ -150,37 +151,38 @@ class OctetsStream(Octets):
 
     def uncompact_uint32(self):
         return self.unmarshal_uint32()
-        if self.pos == self.size(): raise MarshalException()
-        x = ord(self.getbyte(self.pos)) & 0xe0
-        if x == 0xe0:
-            self.unmarshal_uint8()
-            return self.unmarshal_uint32()
-        if x == 0xc0:
-            return self.unmarshal_uint32() & ~0xc0000000L
-        if x == 0xa0 or x == 0x80:
-            return self.unmarshal_uint16() & ~0x8000
-        return self.unmarshal_uint8()
+        # if self.pos == self.size(): raise MarshalException()
+        # x = ord(self.getbyte(self.pos)) & 0xe0
+        # if x == 0xe0:
+        #     self.unmarshal_uint8()
+        #     return self.unmarshal_uint32()
+        # if x == 0xc0:
+        #     return self.unmarshal_uint32() & ~0xc0000000L
+        # if x == 0xa0 or x == 0x80:
+        #     return self.unmarshal_uint16() & ~0x8000
+        # return self.unmarshal_uint8()
 
     def uncompact_sint32(self):
-        if self.pos == self.size(): raise MarshalException()
-        x = ord(self.getbyte(self.pos)) & 0xf0
-        if x == 0xf0:
-            self.unmarshal_uint8()
-            return -(self.unmarshal_uint32())
-        if x == 0xe0:
-            self.unmarshal_uint8()
-            return self.unmarshal_uint32()
-        if x == 0xd0:
-            return -(self.unmarshal_uint32() & ~0xd0000000L)
-        if x == 0xc0:
-            return self.unmarshal_uint32() & ~0xc0000000L
-        if x == 0xb0 or x == 0xa0:
-            return -(self.unmarshal_uint16() & ~0xa000)
-        if x == 0x90 or x == 0x80:
-            return self.unmarshal_uint16() & ~0x8000
-        if x == 0x70 or x == 0x60 or x == 0x50 or x == 0x40:
-            return -(self.unmarshal_uint8() & ~0x40)
-        return self.unmarshal_uint8()
+        return self.unmarshal_uint32()
+        # if self.pos == self.size(): raise MarshalException()
+        # x = ord(self.getbyte(self.pos)) & 0xf0
+        # if x == 0xf0:
+        #     self.unmarshal_uint8()
+        #     return -(self.unmarshal_uint32())
+        # if x == 0xe0:
+        #     self.unmarshal_uint8()
+        #     return self.unmarshal_uint32()
+        # if x == 0xd0:
+        #     return -(self.unmarshal_uint32() & ~0xd0000000L)
+        # if x == 0xc0:
+        #     return self.unmarshal_uint32() & ~0xc0000000L
+        # if x == 0xb0 or x == 0xa0:
+        #     return -(self.unmarshal_uint16() & ~0xa000)
+        # if x == 0x90 or x == 0x80:
+        #     return self.unmarshal_uint16() & ~0x8000
+        # if x == 0x70 or x == 0x60 or x == 0x50 or x == 0x40:
+        #     return -(self.unmarshal_uint8() & ~0x40)
+        # return self.unmarshal_uint8()
 
     def unmarshal_bytes(self):
         os = Octets()
