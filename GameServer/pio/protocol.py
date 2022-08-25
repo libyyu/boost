@@ -29,13 +29,17 @@ class Protocol(Marshal):
 	def decode(cls, iss):
 		ptype = iss.unmarshal_uint16()
 		os = OctetsStream()
-		if not iss.eos:
+		if not iss.eos():
 			iss.unmarshalos(os)
 		if ptype not in all_protocols:
+			logger().w("protocol:%d not register", ptype)
 			return None
 		protocol = all_protocols[ptype]()
 		os.unmarshal(protocol)
 		return protocol
+
+	def process(self):
+		assert 0, 'abstract method Protocol::process'
 
 class PBProtocol(Protocol):
 	def __init__(self, message = None):
@@ -50,7 +54,7 @@ class PBProtocol(Protocol):
 			buffer = pb_helper.MessageToSendBytes(self.message)
 			osstream.append(buffer)
 		except Exception as e:
-			logger.w("PBProtocol.marshal wrong:%s", str(e))
+			logger().e("PBProtocol.marshal wrong:%s", str(e))
 		finally:
 			return osstream
 
@@ -58,7 +62,7 @@ class PBProtocol(Protocol):
 		try:
 			self.message = pb_helper.BytesToMessage(str(isstream))
 		except Exception as e:
-			logger.w("PBProtocol.unmarshal wrong:%s", str(e))
+			logger().e("PBProtocol.unmarshal wrong:%s", str(e))
 		finally:
 			return isstream
 
