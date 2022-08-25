@@ -19,14 +19,13 @@ class DirSession(TCPConnectionDelegage):
     def on_receive(self, data):
         logger().i("receive from %s %d", str(self.address), len(data))
         
-        oss = OctetsStream(order='!').replace(data)
-
-        protocol = Protocol.decode(oss)
-
-        if isinstance(protocol, PBProtocol) and protocol.message is not None and isinstance(protocol.message, message_common_pb2.DirInfo):
-            self._send_dirinfo()
-        else:
-            self.close()
+        try:
+            oss = OctetsStream(order='!').replace(data)
+            protocol = Protocol.decode(oss)
+            if protocol: protocol.process()
+        except Exception as e:
+            logger().e("PBProtocol.marshal wrong:%s", str(e))
+                
 
     def SendProtocol(self, protocol):
         oss = OctetsStream(order='!')

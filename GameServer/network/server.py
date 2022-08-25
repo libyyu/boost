@@ -98,6 +98,7 @@ class TCPConnection(object):
 				if len(chunk) < 2:
 					break
 				bodylen = struct.unpack('!H', chunk)[0]
+				
 				chunk = yield self.stream.read_bytes(bodylen)
 				while len(chunk) < bodylen:
 					chunk += yield self.stream.read_bytes(bodylen - len(chunk))
